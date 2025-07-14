@@ -22,17 +22,22 @@ import type { OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat'
  */
 const sepoliaTContract: OmniPointHardhat = {
     eid: EndpointId.SEPOLIA_V2_TESTNET,
-    contractName: 'MyOFTAdapter',
+    contractName: 'OPENOFTAdapter',
 }
 
 const baseTContract: OmniPointHardhat = {
     eid: EndpointId.BASESEP_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'OmnichainOpen',
 }
 
 const bnbTContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_TESTNET,
-    contractName: 'MyOFT',
+    contractName: 'OmnichainOpen',
+}
+
+const amoyTContract: OmniPointHardhat = {
+    eid: EndpointId.AMOY_V2_TESTNET,
+    contractName: 'OmnichainOpen',
 }
 
 // To connect all the above chains to each other, we need the following pathways:
@@ -67,9 +72,35 @@ const pathways: TwoWayConfig[] = [
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
     ],
-        [
+    // New pair: sepolia ↔ amoy
+    [
+        sepoliaTContract, // Chain A contract
+        amoyTContract, // Chain C contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+    ],
+    [
         baseTContract, // Chain A contract
         bnbTContract, // Chain C contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+    ],
+
+        // New pair: base ↔ amoy
+    [
+        baseTContract, // Chain A contract
+        amoyTContract, // Chain C contract
+        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+        [1, 1], // [A to B confirmations, B to A confirmations]
+        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+    ],
+
+    // New pair: bnb ↔ amoy
+    [
+        bnbTContract, // Chain A contract
+        amoyTContract, // Chain C contract
         [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
@@ -80,7 +111,7 @@ export default async function () {
     // Generate the connections config based on the pathways
     const connections = await generateConnectionsConfig(pathways)
     return {
-        contracts: [{ contract: sepoliaTContract }, { contract: baseTContract }, { contract: bnbTContract }],
+        contracts: [{ contract: sepoliaTContract }, { contract: baseTContract }, { contract: bnbTContract },{contract: amoyTContract }],
         connections,
     }
 }
