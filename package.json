@@ -59,7 +59,6 @@
     "prettier": "^3.2.5",
     "solhint": "^4.1.1",
     "solidity-bytes-utils": "^0.8.2",
-    "solidity-coverage": "^0.8.16",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.4"
   },
@@ -75,5 +74,8 @@
   "overrides": {
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.12.1"
+  },
+  "dependencies": {
+    "solidity-coverage": "^0.8.16"
   }
 }

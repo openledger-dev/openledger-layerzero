@@ -35,6 +35,9 @@ npx create-lz-oapp@latest
 
 ### 5. Deploy Contracts
 - use existing token / or deploy a mockERC20
+```sh
+npx hardhat run scripts/open.ts --networks sepolia-testnet
+```
 - then set the token address in hardhat config.
 
 #### a. Deploy OFT Adapter on Source Chain

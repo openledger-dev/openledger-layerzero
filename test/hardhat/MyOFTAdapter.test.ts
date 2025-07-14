@@ -14,6 +14,7 @@ describe('MyOFTAdapter Test', function () {
     let MyOFT: ContractFactory
     let ERC20Mock: ContractFactory
     let EndpointV2Mock: ContractFactory
+    let tokenHolder: SignerWithAddress
     let ownerA: SignerWithAddress
     let ownerB: SignerWithAddress
     let endpointOwner: SignerWithAddress
@@ -28,16 +29,16 @@ describe('MyOFTAdapter Test', function () {
         // Contract factory for our tested contract
         //
         // We are using a derived contract that exposes a mint() function for testing purposes
-        MyOFTAdapter = await ethers.getContractFactory('MyOFTAdapterMock')
+        MyOFTAdapter = await ethers.getContractFactory('OPENOFTAdapter')
 
-        MyOFT = await ethers.getContractFactory('MyOFTMock')
+        MyOFT = await ethers.getContractFactory('OmnichainOpen')
 
-        ERC20Mock = await ethers.getContractFactory('MyERC20Mock')
+        ERC20Mock = await ethers.getContractFactory('Open')
 
         // Fetching the first three signers (accounts) from Hardhat's local Ethereum network
         const signers = await ethers.getSigners()
 
-        ;[ownerA, ownerB, endpointOwner] = signers
+        ;[ownerA, ownerB, endpointOwner,tokenHolder] = signers
 
         // The EndpointV2Mock contract comes from @layerzerolabs/test-devtools-evm-hardhat package
         // and its artifacts are connected as external artifacts to this project
@@ -56,11 +57,11 @@ describe('MyOFTAdapter Test', function () {
         mockEndpointV2A = await EndpointV2Mock.deploy(eidA)
         mockEndpointV2B = await EndpointV2Mock.deploy(eidB)
 
-        token = await ERC20Mock.deploy('Token', 'TOKEN')
+        token = await ERC20Mock.deploy(tokenHolder.address)
 
         // Deploying two instances of MyOFT contract with different identifiers and linking them to the mock LZEndpoint
         myOFTAdapter = await MyOFTAdapter.deploy(token.address, mockEndpointV2A.address, ownerA.address)
-        myOFTB = await MyOFT.deploy('bOFT', 'bOFT', mockEndpointV2B.address, ownerB.address)
+        myOFTB = await MyOFT.deploy('bOPEN', 'bOPEN', mockEndpointV2B.address, ownerB.address)
 
         // Setting destination endpoints in the LZEndpoint mock for each MyOFT instance
         await mockEndpointV2A.setDestLzEndpoint(myOFTB.address, mockEndpointV2B.address)
@@ -75,7 +76,7 @@ describe('MyOFTAdapter Test', function () {
     it('should send a token from A address to B address via OFTAdapter/OFT', async function () {
         // Minting an initial amount of tokens to ownerA's address in the myOFTA contract
         const initialAmount = ethers.utils.parseEther('100')
-        await token.mint(ownerA.address, initialAmount)
+        await token.connect(tokenHolder).transfer(ownerA.address, initialAmount)
 
         // Defining the amount of tokens to send and constructing the parameters for the send operation
         const tokensToSend = ethers.utils.parseEther('1')
@@ -95,7 +96,6 @@ describe('MyOFTAdapter Test', function () {
 
         // Fetching the native fee for the token send operation
         const [nativeFee] = await myOFTAdapter.quoteSend(sendParam, false)
-
         // Approving the native fee to be spent by the myOFTA contract
         await token.connect(ownerA).approve(myOFTAdapter.address, tokensToSend)
 

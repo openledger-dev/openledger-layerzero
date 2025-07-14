@@ -4,7 +4,6 @@ pragma solidity 0.8.27;
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 
-
 /**
  * @title OmnichainOpen
  * @notice This contract implements an omnichain fungible token (OFT) using LayerZero’s OFT standard.
