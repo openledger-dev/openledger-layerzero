@@ -1,8 +1,3 @@
-// Get the environment configuration from .env file
-//
-// To make use of automatic environment setup:
-// - Duplicate .env.example file and name it .env
-// - Fill in the environment variables
 import 'dotenv/config'
 
 import 'hardhat-deploy'
@@ -56,12 +51,32 @@ const config: HardhatUserConfig = {
         ],
     },
     networks: {
+      //-----mainnets------
+      'Ethereum': {
+            eid: EndpointId.ETHEREUM_V2_MAINNET,
+            url: process.env.RPC_URL_ETHEREUM,
+            accounts,
+            oftAdapter: {
+                tokenAddress: '0x0000000000000000000000000000000000000000', // Set the token address for the OFT adapter (OPEN Token mainnet)
+            },
+        },
+        'Base': {
+            eid: EndpointId.BASE_V2_MAINNET,
+            url: process.env.RPC_URL_BASE,
+            accounts,
+        },
+        'BSC': {
+            eid: EndpointId.BSC_V2_MAINNET,
+            url: process.env.RPC_URL_BNB,
+            accounts,
+        },
+        //-----testnets------
         'sepolia-testnet': {
             eid: EndpointId.SEPOLIA_V2_TESTNET,
             url: process.env.RPC_URL_SEPLOIA_TESTNET,
             accounts,
             oftAdapter: {
-                tokenAddress: '0x755BF7d3e92301689b82767BBF624E7e40238E1a', // Set the token address for the OFT adapter
+                tokenAddress: '0xF015983AadB8A6d329eA76BB52171F81B6efe389', // Set the token address for the OFT adapter
             },
         },
         'base-testnet': {
@@ -74,7 +89,12 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_BNB_TESTNET,
             accounts,
         },
-
+        //new network
+        'amoy-testnet': {
+            eid: EndpointId.AMOY_V2_TESTNET,
+            url: process.env.RPC_URL_AMOY_TESTNET,
+            accounts,
+        },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
