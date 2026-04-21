@@ -25,15 +25,19 @@ const ethereumContract: OmniPointHardhat = {
     contractName: 'OPENOFTAdapter',
 }
 
-const baseContract: OmniPointHardhat = {
-    eid: EndpointId.BASE_V2_MAINNET,
-    contractName: 'OmnichainOpen',
-}
+// const baseContract: OmniPointHardhat = {
+//     eid: EndpointId.BASE_V2_MAINNET,
+//     contractName: 'OmnichainOpen',
+// }
 
 const bnbContract: OmniPointHardhat = {
     eid: EndpointId.BSC_V2_MAINNET,
     contractName: 'OmnichainOpen',
 }
+
+//OFT multisig contract address:0x7d6E779fe16fD2580a038A1094e8c855BA56e37D
+const ownerAddr = "0x7d6E779fe16fD2580a038A1094e8c855BA56e37D"
+const delegateAddr = "0x7d6E779fe16fD2580a038A1094e8c855BA56e37D"
 
 const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
     {
@@ -47,13 +51,13 @@ const EVM_ENFORCED_OPTIONS: OAppEnforcedOption[] = [
 // With the config generator, pathways declared are automatically bidirectional
 // i.e. if you declare A,B there's no need to declare B,A
 const pathways: TwoWayConfig[] = [
-    [
-        ethereumContract, // Chain A contract
-        baseContract, // Chain C contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
-    ],
+    // [
+    //     ethereumContract, // Chain A contract
+    //     baseContract, // Chain C contract
+    //     [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+    //     [1, 1], // [A to B confirmations, B to A confirmations]
+    //     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+    // ],
     [
         ethereumContract, // Chain A contract
         bnbContract, // Chain C contract
@@ -61,20 +65,39 @@ const pathways: TwoWayConfig[] = [
         [1, 1], // [A to B confirmations, B to A confirmations]
         [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
     ],
-    [
-        baseContract, // Chain A contract
-        bnbContract, // Chain C contract
-        [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
-        [1, 1], // [A to B confirmations, B to A confirmations]
-        [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
-    ],
+    // [
+    //     baseContract, // Chain A contract
+    //     bnbContract, // Chain C contract
+    //     [['LayerZero Labs'], []], // [ requiredDVN[], [ optionalDVN[], threshold ] ]
+    //     [1, 1], // [A to B confirmations, B to A confirmations]
+    //     [EVM_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS], // Chain C enforcedOptions, Chain A enforcedOptions
+    // ],
 ]
 
 export default async function () {
-    // Generate the connections config based on the pathways
-    const connections = await generateConnectionsConfig(pathways)
-    return {
-        contracts: [{ contract: ethereumContract }, { contract: baseContract }, { contract: bnbContract }],
-        connections,
-    }
+  // Generate the connections config based on the pathways
+  const connections = await generateConnectionsConfig(pathways);
+
+  return {
+    contracts: [
+      {
+        contract: ethereumContract,
+        config: {
+          delegate: delegateAddr,
+          owner: ownerAddr,
+        },
+      },
+      // { contract: baseContract },
+      {
+        contract: bnbContract,
+        config: {
+          delegate: delegateAddr,
+          owner: ownerAddr,
+        },
+      },
+    ],
+    connections,
+  };
 }
+
+

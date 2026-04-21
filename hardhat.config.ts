@@ -1,5 +1,5 @@
 import 'dotenv/config'
-
+import{vars} from 'hardhat/config'
 import 'hardhat-deploy'
 import 'hardhat-contract-sizer'
 import '@nomiclabs/hardhat-ethers'
@@ -16,10 +16,19 @@ import './tasks/sendOFT'
 //
 // If you prefer using a mnemonic, set a MNEMONIC environment variable
 // to a valid mnemonic
-const MNEMONIC = process.env.MNEMONIC
-
+let MNEMONIC;
 // If you prefer to be authenticated using a private key, set a PRIVATE_KEY environment variable
-const PRIVATE_KEY = process.env.PRIVATE_KEY
+let PRIVATE_KEY;
+const keyName = (process.env.VARNAME || "").toString();
+
+if (vars.has(keyName)){
+     PRIVATE_KEY = vars.get(keyName);
+     console.log(`\x1b[32mNote: ${keyName} key is configured\x1b[0m`);
+}
+else{
+     MNEMONIC = process.env.MNEMONIC
+     PRIVATE_KEY = process.env.PRIVATE_KEY
+}
 
 const accounts: HttpNetworkAccountsUserConfig | undefined = MNEMONIC
     ? { mnemonic: MNEMONIC }
@@ -57,44 +66,44 @@ const config: HardhatUserConfig = {
             url: process.env.RPC_URL_ETHEREUM,
             accounts,
             oftAdapter: {
-                tokenAddress: '0x0000000000000000000000000000000000000000', // Set the token address for the OFT adapter (OPEN Token mainnet)
+                tokenAddress: '0xA227Cc36938f0c9E09CE0e64dfab226cad739447', // Set the token address for the OFT adapter (OPEN Token mainnet)
             },
         },
-        'Base': {
-            eid: EndpointId.BASE_V2_MAINNET,
-            url: process.env.RPC_URL_BASE,
-            accounts,
-        },
+        // 'Base': {
+        //     eid: EndpointId.BASE_V2_MAINNET,
+        //     url: process.env.RPC_URL_BASE,
+        //     accounts,
+        // },
         'BSC': {
             eid: EndpointId.BSC_V2_MAINNET,
             url: process.env.RPC_URL_BNB,
             accounts,
         },
-        //-----testnets------
-        'sepolia-testnet': {
-            eid: EndpointId.SEPOLIA_V2_TESTNET,
-            url: process.env.RPC_URL_SEPLOIA_TESTNET,
-            accounts,
-            oftAdapter: {
-                tokenAddress: '0xF015983AadB8A6d329eA76BB52171F81B6efe389', // Set the token address for the OFT adapter
-            },
-        },
-        'base-testnet': {
-            eid: EndpointId.BASESEP_V2_TESTNET,
-            url: process.env.RPC_URL_BASE_TESTNET,
-            accounts,
-        },
-        'bnb-testnet': {
-            eid: EndpointId.BSC_V2_TESTNET,
-            url: process.env.RPC_URL_BNB_TESTNET,
-            accounts,
-        },
-        //new network
-        'amoy-testnet': {
-            eid: EndpointId.AMOY_V2_TESTNET,
-            url: process.env.RPC_URL_AMOY_TESTNET,
-            accounts,
-        },
+        // //-----testnets------
+        // 'sepolia-testnet': {
+        //     eid: EndpointId.SEPOLIA_V2_TESTNET,
+        //     url: process.env.RPC_URL_SEPLOIA_TESTNET,
+        //     accounts,
+        //     oftAdapter: {
+        //         tokenAddress: '', // Set the token address for the OFT adapter
+        //     },
+        // },
+        // 'base-testnet': {
+        //     eid: EndpointId.BASESEP_V2_TESTNET,
+        //     url: process.env.RPC_URL_BASE_TESTNET,
+        //     accounts,
+        // },
+        // 'bnb-testnet': {
+        //     eid: EndpointId.BSC_V2_TESTNET,
+        //     url: process.env.RPC_URL_BNB_TESTNET,
+        //     accounts,
+        // },
+        // //new network
+        // 'amoy-testnet': {
+        //     eid: EndpointId.AMOY_V2_TESTNET,
+        //     url: process.env.RPC_URL_AMOY_TESTNET,
+        //     accounts,
+        // },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
