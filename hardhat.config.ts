@@ -68,42 +68,20 @@ const config: HardhatUserConfig = {
             oftAdapter: {
                 tokenAddress: '0xA227Cc36938f0c9E09CE0e64dfab226cad739447', // Set the token address for the OFT adapter (OPEN Token mainnet)
             },
+            safeConfig: {
+                safeUrl: "https://safe-transaction-mainnet.safe.global",
+                safeAddress: "0x7d6E779fe16fD2580a038A1094e8c855BA56e37D"
+            }
         },
-        // 'Base': {
-        //     eid: EndpointId.BASE_V2_MAINNET,
-        //     url: process.env.RPC_URL_BASE,
-        //     accounts,
-        // },
         'BSC': {
             eid: EndpointId.BSC_V2_MAINNET,
             url: process.env.RPC_URL_BNB,
             accounts,
+            safeConfig: {
+                safeUrl: "https://safe-transaction-bsc.safe.global",
+                safeAddress: "0x7d6E779fe16fD2580a038A1094e8c855BA56e37D"
+            }
         },
-        // //-----testnets------
-        // 'sepolia-testnet': {
-        //     eid: EndpointId.SEPOLIA_V2_TESTNET,
-        //     url: process.env.RPC_URL_SEPLOIA_TESTNET,
-        //     accounts,
-        //     oftAdapter: {
-        //         tokenAddress: '', // Set the token address for the OFT adapter
-        //     },
-        // },
-        // 'base-testnet': {
-        //     eid: EndpointId.BASESEP_V2_TESTNET,
-        //     url: process.env.RPC_URL_BASE_TESTNET,
-        //     accounts,
-        // },
-        // 'bnb-testnet': {
-        //     eid: EndpointId.BSC_V2_TESTNET,
-        //     url: process.env.RPC_URL_BNB_TESTNET,
-        //     accounts,
-        // },
-        // //new network
-        // 'amoy-testnet': {
-        //     eid: EndpointId.AMOY_V2_TESTNET,
-        //     url: process.env.RPC_URL_AMOY_TESTNET,
-        //     accounts,
-        // },
         hardhat: {
             // Need this for testing because TestHelperOz5.sol is exceeding the compiled contract size limit
             allowUnlimitedContractSize: true,
