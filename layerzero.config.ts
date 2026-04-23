@@ -38,11 +38,11 @@ const bnbContract: OmniPointHardhat = {
 // ── Enforced options, keyed by DESTINATION chain ─────────────────────────────
 // ~20k above the GAS_PROFILING
 const ENFORCED_OPTS_TO_BNB: OAppEnforcedOption[] = [
-    { msgType: 1, optionType: ExecutorOptionType.LZ_RECEIVE, gas: 80_000, value: 0 },
+    { msgType: 1, optionType: ExecutorOptionType.LZ_RECEIVE, gas: 90_000, value: 0 },
 ]
 
 const ENFORCED_OPTS_TO_ETH: OAppEnforcedOption[] = [
-    { msgType: 1, optionType: ExecutorOptionType.LZ_RECEIVE, gas: 80_000, value: 0 },
+    { msgType: 1, optionType: ExecutorOptionType.LZ_RECEIVE, gas: 90_000, value: 0 },
 ]
 
 // ── Pathways ─────────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ const pathways: TwoWayConfig[] = [
     [
         ethereumContract, // Chain A
         bnbContract,    // Chain B
-        [['Google', 'LayerZero Labs'], [['Nethermind', 'Horizen'], 1]], // [ requiredDVNs, [ optionalDVNs, threshold ] ]
+        [['Google', 'LayerZero Labs', 'Canary', 'Deutsche Telekom'], []], // [ requiredDVNs, [ optionalDVNs, threshold ] ]
         [ETH_CONFIRMATIONS, BNB_CONFIRMATIONS],
         [ENFORCED_OPTS_TO_BNB, ENFORCED_OPTS_TO_ETH],
     ],
